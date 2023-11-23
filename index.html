@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Efficiency Data</title>
+    <!-- Bootstrap CSS for styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your custom stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container mt-3">
+        <h1>Fuel Efficiency Data</h1>
+        {% if data %}
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <!-- Replace with your actual column names -->
+                        {% if data and data|length > 0 %}
+                            {% for key in data[0] %}
+                                <th>{{ key }}</th>
+                            {% endfor %}
+                        {% else %}
+                            <th>Column Name</th>
+                            <!-- Repeat for the number of columns you expect -->
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Loop through the data and display each record -->
+                    {% for record in data %}
+                    <tr>
+                        {% for key in record %}
+                            <td>{{ record[key] }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No data available to display.</p>
+        {% endif %}
+    </div>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
