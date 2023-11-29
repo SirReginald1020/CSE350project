@@ -8,6 +8,22 @@ from kaggle.api.kaggle_api_extended import KaggleApi
 
 app = Flask(__name__)
 
+from flask import Response
+
+# ... rest of your Flask app code ...
+
+@app.route('/download-data')
+def download_data():
+    fuel_data = get_csv_from_kaggle()  # Make sure this is the same function you use to get the DataFrame
+    if fuel_data is not None:
+        csv = fuel_data.to_csv(index=False)  # Convert DataFrame to CSV string
+        return Response(
+            csv,
+            mimetype="text/csv",
+            headers={"Content-disposition": "attachment; filename=fuel_data.csv"}
+        )
+    else:
+        return "Error: No data found!", 404
 
 # Function to find and organize any HTML files in the project directory
 def html_into_templates(proj_path, debug):
@@ -98,6 +114,16 @@ def get_csv_from_kaggle():
                 'Annual Fuel Cost (FT2)']
         cut_csv('database.csv', 'database.csv', keep)
         data = pd.read_csv(filepath)
+
+        # Make the average table by reading the data, grouping by year and mathing,
+        # move it to data folder
+        readavg = pd.read_csv('dataset-folder/database.csv')
+        avg_prices = readavg.groupby('Year')[['Annual Fuel Cost (FT1)','Annual Fuel Cost (FT2)']].mean()
+        avg_prices.to_csv('avg_prices_peryear.csv', index=True)
+        movencheck = os.path.join('dataset-folder', 'avg_prices_peryear.csv')
+        if os.path.exists(movencheck):
+            os.remove(movencheck)
+        shutil.move('avg_prices_peryear.csv', 'dataset-folder')
         return data
     else:
         print(f"File {filepath} not found. Check if the dataset contains 'database.csv'.")
