@@ -94,56 +94,59 @@ def cut_csv(filein, fileout, colstokeep):
                     del row[col]
                 writer.writerow(row)
 
-    # To make the graph use avg_prices_peryear.csv
-    fpath = 'dataset-folder/avg_prices_peryear.csv'
-    years = []
-    cost_1 = []
-    cost_2 = []
+    writehtml = False
+    if writehtml:
+        # To make the graph use avg_prices_peryear.csv
+        fpath = 'dataset-folder/avg_prices_peryear.csv'
+        years = []
+        cost_1 = []
+        cost_2 = []
 
-    with open(fpath, 'r') as csvfile:
-        reader = csv.DictReader(csvfile)
-        for row in reader:
-            years.append(row['Year'])
-            cost_1.append(row['Annual Fuel Cost (FT1)'])
-            cost_2.append(row['Annual Fuel Cost (FT2)'])
-    chart_data = "['Year', 'Annual Cost (FT1)', 'Annual Cost (FT2)'],\n"
-    for i in range(len(years)):
-        chart_data += f"['{years[i]}', {cost_1[i]}, {cost_2[i]}], \n"
-    existing_html = 'templates/page1.html'
-    with open(existing_html, 'r') as existing:
-        html_content = existing.read()
+        with open(fpath, 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                years.append(row['Year'])
+                cost_1.append(row['Annual Fuel Cost (FT1)'])
+                cost_2.append(row['Annual Fuel Cost (FT2)'])
+        chart_data = "['Year', 'Annual Cost (FT1)', 'Annual Cost (FT2)'],\n"
+        for i in range(len(years)):
+            chart_data += f"['{years[i]}', {cost_1[i]}, {cost_2[i]}], \n"
+        existing_html = 'templates/page1.html'
+        with open(existing_html, 'r') as existing:
+            html_content = existing.read()
 
-    placeholder = '<!-- placeholder for chart -->'
-    chartscript = f'''
-    google.charts.load('current', {{"packages":["corechart"]}}); 
+        placeholder = '<!-- placeholder for chart -->'
+        chartscript = f'''
+        google.charts.load('current', {{"packages":["corechart"]}}); 
+    
+        google.charts.setOnLoadCallback(drawChart); 
+    
+        function drawChart() {{ 
+    
+            var data = google.visualization.arrayToDataTable([ 
+    
+                {chart_data} 
+    
+            ]); 
+    
+            var options = {{ 
+    
+                title: 'Average of Annual Fuel Costs Over Years', 
+    
+                curveType: 'function', 
+    
+                legend: {{ position: 'bottom' }} 
+    
+            }}; 
+    
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart')); 
+    
+            chart.draw(data, options); 
+        }} '''
+        html_content = html_content.replace(placeholder, chartscript)
+        with open(existing_html, 'w') as existing:
+            existing.write(html_content)
 
-    google.charts.setOnLoadCallback(drawChart); 
-
-    function drawChart() {{ 
-
-        var data = google.visualization.arrayToDataTable([ 
-
-            {chart_data} 
-
-        ]); 
-
-        var options = {{ 
-
-            title: 'Average of Annual Fuel Costs Over Years', 
-
-            curveType: 'function', 
-
-            legend: {{ position: 'bottom' }} 
-
-        }}; 
-
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart')); 
-
-        chart.draw(data, options); 
-    }} '''
-    html_content = html_content.replace(placeholder, chartscript)
-    with open(existing_html, 'w') as existing:
-        existing.write(html_content)
 
 # Function that sets up the Kaggle API connection and authenticates
 def connect_to_kaggle():
