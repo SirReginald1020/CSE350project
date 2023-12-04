@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page 4</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            background-color: rgb(138, 235, 159);
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-left: 40px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 35px;
+            left: 20px;
+            padding: 4px 6px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #plotly-chart {
+            width: 100%;
+            max-width: 900px; /* Adjust as needed */
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Top 5 Makes with Lowest Average Annual Fuel Cost (FT2)</h1>
+    <p>This graph represents the car makes that have the lowest average annual fuel costs for Fuel Type 2.</p>
+    
+    <!-- Plotly chart will be rendered here -->
+    <div id="plotly-chart"></div>
+    <script>
+        // Render the Plotly chart
+        const plotJson = {{ plot_json|safe }};
+        Plotly.newPlot('plotly-chart', plotJson.data, plotJson.layout);
+    </script>
+    <p id="graph-description">
+            The chart above clearly illustrates BMW as the leading make with the lowest average annual fuel costs for Fuel Type 2, signifying a notable edge in fuel economy. This could reflect BMW's commitment to fuel efficiency and may influence consumer choices for those seeking cost-effective vehicle options.
+        </p>
+    <a href="/" class="back-btn">Back to Main Page</a>
+</body>
+</html>
+

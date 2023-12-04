@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page 1</title>
+    <title>Page 2</title>
     <style>
         body {
             background-color: rgb(138, 235, 159);
@@ -42,7 +42,7 @@
 
         img {
             display: block;
-            margin: 30px auto 0;
+            margin: 30px auto 0; 
             width: 50%;
             max-width: 100%;
             height: auto;
@@ -51,12 +51,15 @@
     </style>
 </head>
 <body>
-    <h1>Comparing Fuel Prices for FT1</h1>
-    <p>Explore the average annual fuel costs for different fuel types across various vehicles. The horizontal axis represents Fuel Type 1, including Premium Gasoline, Midgrade Gasoline, Natural Gas, Regular Gasoline, Diesel, and Electricity. The vertical axis represents the Average Annual Fuel Cost (in dollars), ranging from 0 to 2000+. Use this graph to compare the cost efficiency of different fuel types.</p>
-    <!-- content for Page 1  -->
-    <img src="data:image/png;base64,{{ img_str }}" alt="Bar Graph"/>
+    <h1>Comparing Fuel Prices for FT2</h1>
+    <p>Explore the average annual fuel costs for different fuel types across various vehicles. The horizontal axis represents Fuel Type 2, including Propane, E85, Natural Gas, and Electricity. The vertical axis represents the Average Annual Fuel Cost (in dollars), ranging from 0 to 3500+. Use this graph to compare the cost efficiency of different fuel types for FT2.</p>
+    <!-- content for Page 2  -->
+    <img src="data:image/png;base64,{{ img_str_page2 }}" alt="Bar Graph" style="display: block; margin-left: auto; margin-right: auto; width: 50%;"/>
     <!-- Button to go back to the main page -->
-    <p>From the graph, we can see that Premium and Midrange gasoline have the highest average annual fuel costs for FT1 with an average annual fuel cost above 2500. Electric by far has the lowest average annual fuel costs at slightly over 500 and would be an effective choice among those looking to have a low average annual fuel cost.</p>
+    <p>From the graph, we can see that Propane by far has the highest average annual fuel cost at over 3500. Electric has the lowest annual fuel cost at around 150. Electric seems like the best option when it comes to having a low annual fuel cost for Fuel Type 2.</p>
     <a href="/" class="back-btn">Back to Main Page</a>
 </body>
 </html>
+
+
+

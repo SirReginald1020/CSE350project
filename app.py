@@ -4,11 +4,14 @@ import pandas as pd
 import os
 import shutil
 from kaggle.api.kaggle_api_extended import KaggleApi
-from io import BytesIO
 import base64
+from io import BytesIO
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import plotly
+import plotly.express as px
+import json
 
 app = Flask(__name__)
 
@@ -27,11 +30,10 @@ def internal_error(error):
 
 from flask import Response
 
-# ... rest of your Flask app code ...
 
 @app.route('/download-data')
 def download_data():
-    fuel_data = get_csv_from_kaggle()  # Make sure this is the same function you use to get the DataFrame
+    fuel_data = get_csv_from_kaggle()
     if fuel_data is not None:
         csv = fuel_data.to_csv(index=False)  # Convert DataFrame to CSV string
         return Response(
@@ -94,59 +96,6 @@ def cut_csv(filein, fileout, colstokeep):
                     del row[col]
                 writer.writerow(row)
 
-    writehtml = False
-    if writehtml:
-        # To make the graph use avg_prices_peryear.csv
-        fpath = 'dataset-folder/avg_prices_peryear.csv'
-        years = []
-        cost_1 = []
-        cost_2 = []
-
-        with open(fpath, 'r') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                years.append(row['Year'])
-                cost_1.append(row['Annual Fuel Cost (FT1)'])
-                cost_2.append(row['Annual Fuel Cost (FT2)'])
-        chart_data = "['Year', 'Annual Cost (FT1)', 'Annual Cost (FT2)'],\n"
-        for i in range(len(years)):
-            chart_data += f"['{years[i]}', {cost_1[i]}, {cost_2[i]}], \n"
-        existing_html = 'templates/page1.html'
-        with open(existing_html, 'r') as existing:
-            html_content = existing.read()
-
-        placeholder = '<!-- placeholder for chart -->'
-        chartscript = f'''
-        google.charts.load('current', {{"packages":["corechart"]}}); 
-    
-        google.charts.setOnLoadCallback(drawChart); 
-    
-        function drawChart() {{ 
-    
-            var data = google.visualization.arrayToDataTable([ 
-    
-                {chart_data} 
-    
-            ]); 
-    
-            var options = {{ 
-    
-                title: 'Average of Annual Fuel Costs Over Years', 
-    
-                curveType: 'function', 
-    
-                legend: {{ position: 'bottom' }} 
-    
-            }}; 
-    
-            var chart = new google.visualization.LineChart(document.getElementById('curve_chart')); 
-    
-            chart.draw(data, options); 
-        }} '''
-        html_content = html_content.replace(placeholder, chartscript)
-        with open(existing_html, 'w') as existing:
-            existing.write(html_content)
-
 
 # Function that sets up the Kaggle API connection and authenticates
 def connect_to_kaggle():
@@ -174,7 +123,6 @@ def get_csv_from_kaggle():
     # Download dataset files
     api.dataset_download_files(dataset_name, path=savepath, unzip=True)
 
-    # Assuming the file is named 'database.csv' and is located in the folder 'dataset-folder'
     filepath = os.path.join(savepath, 'database.csv')
 
     # Check if the file exists before reading
@@ -235,8 +183,8 @@ def page1():
         sorted_data = fuel_data.groupby('Fuel Type 1')['Annual Fuel Cost (FT1)'].mean().sort_values(ascending=False)
         sorted_data.plot(kind='bar', color='skyblue')
         plt.title('Average Annual Fuel Cost (FT1) by Fuel Type 1')
-        plt.xlabel('Fuel Type 1')
-        plt.ylabel('Average Annual Fuel Cost (FT1)')
+        plt.xlabel('Fuel Type 1', fontsize=11, fontweight='bold', labelpad=20)  # Set font size, make it bold, and adjust label position
+        plt.ylabel('Average Annual Fuel Cost', fontsize=11, fontweight='bold')  # Adjust label position for the y-axis
         plt.xticks(rotation=45, ha='right')  # Rotate x-axis labels for better readability
         plt.tight_layout()
 
@@ -254,7 +202,110 @@ def page1():
         return render_template('error.html', message="Data could not be loaded.")
 
 
+@app.route('/page2')
+def page2():
+    # Get the data
+    fuel_data = get_csv_from_kaggle()
 
+    # If the data is successfully retrieved, convert it to records for display
+    if fuel_data is not None:
+        # Create the chart for Fuel Type 2
+        plt.figure(figsize=(8, 4))
+        sorted_data_page2 = fuel_data.groupby('Fuel Type 2')['Annual Fuel Cost (FT2)'].mean().sort_values(ascending=False)
+        sorted_data_page2.plot(kind='bar', color='lightcoral')
+        plt.title('Average Annual Fuel Cost (FT2) by Fuel Type 2')
+        plt.xlabel('Fuel Type 2', fontsize=11, fontweight='bold', labelpad=20)
+        plt.ylabel('Average Annual Fuel Cost', fontsize=11, fontweight='bold')
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+
+        # Save the plot to a BytesIO object
+        img_page2 = BytesIO()
+        plt.savefig(img_page2, format='png')
+        img_page2.seek(0)
+
+        # Convert the image to base64 for embedding in HTML
+        img_str_page2 = base64.b64encode(img_page2.read()).decode('utf-8')
+
+        # Pass the image to the template
+        return render_template('page2.html', img_str_page2=img_str_page2)
+    else:
+        return render_template('error.html', message="Data could not be loaded.")
+
+
+@app.route('/page3')
+def page3():
+    # Get the data
+    fuel_data = get_csv_from_kaggle()
+
+    # If the data is successfully retrieved, convert it to records for display
+    if fuel_data is not None:
+        # Group by 'Make' and calculate the average annual fuel cost (FT1)
+        make_avg_fuel_cost = fuel_data.groupby('Make')['Annual Fuel Cost (FT1)'].mean()
+
+        # Select the top 5 makes with the lowest average annual fuel cost
+        top_5_low_cost_makes = make_avg_fuel_cost.nsmallest(5)
+
+        # Create bar chart for top 5 makes with lowest average annual fuel cost
+        plt.figure(figsize=(10, 6))  # Increased figure size
+
+        # Top 5 makes with lowest average annual fuel cost
+        plt.bar(top_5_low_cost_makes.index, top_5_low_cost_makes, color='lightblue')
+        plt.title('Top 5 Makes with Lowest Average Annual Fuel Cost (FT1)')
+        plt.xlabel('Make', fontsize=12, fontweight='bold', labelpad=20)
+        plt.ylabel('Average Annual Fuel Cost', fontsize=12, fontweight='bold')
+        plt.xticks(range(len(top_5_low_cost_makes)), top_5_low_cost_makes.index, rotation=45, ha='right')
+
+        plt.tight_layout(pad=4.0, h_pad=None, w_pad=None, rect=[0, 0.1, 1, 1])
+        plt.subplots_adjust(bottom=0.15)  # Adjust bottom spacing
+
+        # Save the plot to a BytesIO object
+        img_low_cost = BytesIO()
+        plt.savefig(img_low_cost, format='png', bbox_inches='tight')
+        img_low_cost.seek(0)
+
+        # Convert the image to base64 for embedding in HTML
+        img_str_low_cost = base64.b64encode(img_low_cost.read()).decode('utf-8')
+
+        # Close the current figure to release resources
+        plt.close()
+
+        # Pass the data and image to the template
+        return render_template('page3.html', img_str_low_cost=img_str_low_cost)
+    else:
+        return render_template('error.html', message="Data could not be loaded.")
+
+@app.route('/page4')
+def page4():
+    # Get the data
+    fuel_data = get_csv_from_kaggle()
+
+    if fuel_data is not None:
+        # Filter out rows where 'Annual Fuel Cost (FT2)' is 0
+        filtered_data = fuel_data[fuel_data['Annual Fuel Cost (FT2)'] > 0]
+
+        # Now group by 'Make' and calculate the average annual fuel cost (FT2)
+        make_avg_fuel_cost_ft2 = filtered_data.groupby('Make')['Annual Fuel Cost (FT2)'].mean()
+
+        # Select the top 5 makes with the lowest average annual fuel cost for Fuel Type 2
+        top_5_low_cost_makes_ft2 = make_avg_fuel_cost_ft2.nsmallest(5)
+
+        # Create a Plotly bar chart
+        fig = px.bar(top_5_low_cost_makes_ft2, x=top_5_low_cost_makes_ft2.index, y=top_5_low_cost_makes_ft2,
+                     labels={'x': 'Make', 'y': 'Average Annual Fuel Cost (FT2)'},
+                     title='Top 5 Makes with Lowest Average Annual Fuel Cost (FT2)')
+
+        # Convert the figure to JSON
+        plot_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+        # Pass the plotly figure JSON to the template
+        return render_template('page4.html', plot_json=plot_json)
+
+    else:
+        return render_template('error.html', message="Data could not be loaded.")
+@app.route('/page5')
+def page5():
+    return render_template('page5.html')
 if __name__ == '__main__':
     # Debugging?
     debug: bool = True

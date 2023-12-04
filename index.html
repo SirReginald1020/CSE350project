@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fuel Efficiency Data</title>
     <!-- Bootstrap CSS for styling -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Your custom stylesheet -->
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -14,12 +15,17 @@
         <h1>Fuel Efficiency Data</h1>
         <!-- Website Description -->
         <p>Welcome to the Fuel Efficiency Data Comparison Website! Our website allows you to explore and analyze fuel efficiency data in an interactive and informative way. Whether you're a car enthusiast, a data enthusiast, or simply curious about fuel efficiency, our site provides you with valuable insights.</p>
-        <p><strong>Key Features:</strong></p>
-        <ul>
-            <li><strong>Fuel Efficiency Data Table:</strong> Our main page presents a comprehensive table of fuel efficiency data, including various fuel types and their associated metrics. You can easily scroll through and explore the data to make informed comparisons.</li>
-            <li><strong>Download Data:</strong> Need the data for offline use or further analysis? We've got you covered! Use the "Download Data as CSV" button to save the data to your device.</li>
-            <li><strong>Fuel Efficiency Comparison:</strong> Dive deeper into the data with our interactive bar graph on the "Page 1" section. This visual representation allows you to compare different fuel types and their efficiency at a glance.</li>
-        </ul>
+
+        <!-- Key Features Section with Boxed Outline -->
+        <div class="key-features">
+            <p><strong>Key Features:</strong></p>
+            <ul>
+                <li><strong>Fuel Efficiency Data Table:</strong> Our main page presents a comprehensive table of fuel efficiency data, including various fuel types and their associated metrics. You can easily scroll through and explore the data to make informed comparisons.</li>
+                <li><strong>Download Data:</strong> Need the data for offline use or further analysis? We've got you covered! Use the "Download Data as CSV" button to save the data to your device.</li>
+                <li><strong>Fuel Efficiency Comparison:</strong> Dive deeper into the data with our interactive graphs featured on pages 1 through 5. These data representations allow you to compare different fuel types and their efficiency at a glance.</li>
+            </ul>
+        </div>
+
         <!-- Search Form -->
         <form method="post" action="{{ url_for('index') }}" style="margin-bottom: 20px;">
             <input type="text" name="search_query" placeholder="Search...">
@@ -29,19 +35,36 @@
         <a href="{{ url_for('download_data') }}" class="btn btn-success mb-3">Download Data as CSV</a>
         <!-- Page 1 -->
         <a href="{{ url_for('page1') }}" class="btn btn-primary mb-3">Go to Page 1</a>
+    
+        <a href="{{ url_for('page2') }}" class="btn btn-info mb-3">Go to Page 2</a>
+
+        <a href="{{ url_for('page3') }}" class="btn btn-primary mb-3">Go to Page 3</a>
+    
+        <a href="{{ url_for('page4') }}" class="btn btn-info mb-3">Go to Page 4</a>
+
+        <a href="{{ url_for('page5') }}" class="btn btn-primary mb-3">Go to Page 5</a>
         
         <form method="post" action="{{ url_for('index') }}">
             <select name="filter_fuel_type1">
                 <option value="">All</option>
-                <option value="Gasoline">Gasoline</option>
+                <option value="Premium Gasoline">Premium Gasoline</option>
+                <option value="Midgrade Gasoline">Midgrade Gasoline</option>
+                <option value="Natural Gas">Natural Gas</option>
+                <option value="Regular Gasoline">Regular Gasoline</option>
                 <option value="Diesel">Diesel</option>
-                <!-- Add more fuel types as needed -->
+                <option value="Electricity">Electricity</option>
+                
             </select>
             <select name="filter_fuel_type2">
                 <option value="">All</option>
-                <option value="Regular">Regular</option>
-                <option value="Premium">Premium</option>
-                <!-- Add more fuel types as needed -->
+                <option value="Propane">Propane</option>
+                <option value="E85">E85</option>
+                <option value="Natural Gas">Natural Gas</option>
+                <option value="Electricity">Electricity</option>
+
+            
+
+                
             </select>
             <button type="submit">Apply Filters</button>
         </form>
@@ -59,7 +82,7 @@
                                 {% endfor %}
                             {% else %}
                                 <th>Column Name</th>
-                                <!-- Repeat for the number of columns you expect -->
+                                
                             {% endif %}
                         </tr>
                     </thead>
@@ -84,4 +107,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page 5</title>
+    <style>body {
+            background-color: rgb(138, 235, 159);
+            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            margin-left: 40px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 35px;
+            left: 20px;
+            padding: 4px 6px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        p {
+            text-indent: 20px;
+            font-size: 1.0rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+    </style>
+    <!-- Google Charts script -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+    google.charts.load('current', {"packages":["corechart"]});
+
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+        var data = google.visualization.arrayToDataTable([
+
+            ['Year', 'Annual Cost (FT1)', 'Annual Cost (FT2)'],
+['1984', 1919.0936863543789, 0.0],
+['1985', 1935.5673133450912, 0.0],
+['1986', 1952.5619834710744, 0.0],
+['1987', 1993.103448275862, 0.0],
+['1988', 1978.2300884955753, 0.0],
+['1989', 2015.7415437987859, 0.0],
+['1990', 2017.857142857143, 0.0],
+['1991', 2060.1148409893995, 0.0],
+['1992', 2064.228367528992, 0.0],
+['1993', 2029.0484903934125, 0.0],
+['1994', 2033.8085539714868, 0.0],
+['1995', 2065.149948293692, 0.0],
+['1996', 1965.0711513583442, 0.0],
+['1997', 1990.4855643044618, 0.0],
+['1998', 1973.0911330049262, 0.0],
+['1999', 1981.455399061033, 0.0],
+['2000', 2009.8214285714287, 40.23809523809524],
+['2001', 2023.3809001097695, 58.72667398463227],
+['2002', 2048.6153846153848, 80.2051282051282],
+['2003', 2085.057471264368, 98.1800766283525],
+['2004', 2075.4010695187167, 111.31907308377896],
+['2005', 2078.730703259005, 90.73756432246998],
+['2006', 2093.75, 73.6413043478261],
+['2007', 2089.920071047957, 130.550621669627],
+['2008', 2088.8795282224096, 132.64532434709352],
+['2009', 2003.522920203735, 193.16638370118847],
+['2010', 1941.1818181818182, 203.1818181818182],
+['2011', 1927.8322925958964, 303.7020517395183],
+['2012', 1892.031523642732, 308.53765323992997],
+['2013', 1828.0153977758769, 310.47904191616766],
+['2014', 1818.246051537822, 262.80133000831256],
+['2015', 1770.9448818897638, 168.70078740157481],
+['2016', 1724.64, 112.04],
+['2017', 1735.4234527687297, 105.21172638436482],
+
+
+        ]);
+
+        var options = {
+
+            title: 'Average of Annual Fuel Costs Over Years',
+
+            curveType: 'function',
+
+            legend: { position: 'bottom' }
+
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        chart.draw(data, options);
+        document.getElementById('curve_chart').style.margin = '0 auto';
+
+    }
+    </script>
+</head>
+<body>
+<h1>Average Annual Fuel Cost by Year for FT1 and FT2</h1>
+<p>This chart describes the annual fuel cost per year for FT1 and FT2 unadjusted by inflation. Hover over the line to see the exact value in any given year; all values are USD.</p>
+<!-- Google Chart deploy -->
+<div id="curve_chart" style="width: 900px; height: 500px"></div>
+<p>This graph showcases the seemingly increasing affordability of fuel as the years progress and technology advances, assuming that is a driver in the further optimization of fuel processing.</p>
+<a href="/" class="back-btn">Back to Main Page</a>
+</body>
+</html>

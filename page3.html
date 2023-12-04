@@ -1,10 +1,10 @@
-<!-- page1.html -->
+<!-- page3.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page 1</title>
+    <title>Page 3</title>
     <style>
         body {
             background-color: rgb(138, 235, 159);
@@ -42,7 +42,7 @@
 
         img {
             display: block;
-            margin: 30px auto 0;
+            margin: 30px auto 0; 
             width: 50%;
             max-width: 100%;
             height: auto;
@@ -51,12 +51,14 @@
     </style>
 </head>
 <body>
-    <h1>Comparing Fuel Prices for FT1</h1>
-    <p>Explore the average annual fuel costs for different fuel types across various vehicles. The horizontal axis represents Fuel Type 1, including Premium Gasoline, Midgrade Gasoline, Natural Gas, Regular Gasoline, Diesel, and Electricity. The vertical axis represents the Average Annual Fuel Cost (in dollars), ranging from 0 to 2000+. Use this graph to compare the cost efficiency of different fuel types.</p>
-    <!-- content for Page 1  -->
-    <img src="data:image/png;base64,{{ img_str }}" alt="Bar Graph"/>
+    <h1>Make's with the lowest average annual fuel costs for FT1 </h1>
+    <p>This graph represents the car makes that have the lowest average annual fuel costs for Fuel Type 1. If you have a car that uses FT1, this graph is a key source of information to allow you to make a better decision. Purchasing a vehicle is a big decision and it's important to consider all factors.</p>
+    <!-- content for Page 3 -->
+    <img src="data:image/png;base64,{{ img_str_low_cost }}" alt="Bar Graph" style="display: block; margin-left: auto; margin-right: auto; width: 50%;"/>
     <!-- Button to go back to the main page -->
-    <p>From the graph, we can see that Premium and Midrange gasoline have the highest average annual fuel costs for FT1 with an average annual fuel cost above 2500. Electric by far has the lowest average annual fuel costs at slightly over 500 and would be an effective choice among those looking to have a low average annual fuel cost.</p>
+    <p id="graph-description">
+    The graph above highlights Tesla as the manufacturer with the lowest average annual fuel costs for Fuel Type 1, underscoring its efficiency and cost-effectiveness in terms of fuel consumption. This could be particularly appealing to cost-conscious consumers who prioritize long-term savings on fuel. The data suggests that Tesla vehicles, possibly due to their electric powertrains, offer a significant advantage in minimizing operational costs compared to traditional combustion engine vehicles.
+        </p>
     <a href="/" class="back-btn">Back to Main Page</a>
 </body>
 </html>
